@@ -1,0 +1,46 @@
+include::_{backend}_settings.adoc[]
+
+= Generating an addition export file
+
+At the moment shared libraries are used manual export macros have to be used to export
+the symbols that should be accessible from the outside. These export macros are specific
+to each shared library and are normally defined in its own unique export file.
+
+The taox11 ridlc backend has support of generating such an unique export file as part
+of the generation step.
+
+For example, to generate the export file for CORBA AMI the following helper method can
+be used.
+
+[source,ruby]
+-------------------------------------------------------------------------------------------------
+def self.gen_amic_export(options)
+  return if IDL.has_production?(:amic_export_header)
+  export_file = options.amic_export_file || options.amic_export_include
+  if export_file
+    so = GenFile.new(File.join(options.outputdir, export_file))
+    IDL.push_production(
+        :amic_export_header,
+        ::IDL::Cxx11::ExportHeaderWriter.new(options.amic_export_macro, export_file, so, options))
+  else
+    IDL.error('ERROR: it is not allowed to use -Gxhsta without specifying the file with -Wb,amic_export_file=FILE, '+
+                  '-Wb,amic_export_include=FILE or -Wb,base_export_include=FILE_PREFIX')
+    exit 1
+  end
+end
+-------------------------------------------------------------------------------------------------
+
+For the generation a writer has to be created which is added to the IDL production using an
+uniqued id (:amic_export_header in this case).
+
+Because it could happen that the generation of the export file is triggered multiple time
+we first use `IDL.has_production` to check whether we don't have a production for our id,
+if we already have one we just stop.
+
+Meaning of GenFile???
+
+The ExportHeaderWriter will create the export file and needs the export macro, the filename, and the
+GenFile to generate into.
+
+When our custom ruby method has a problem it can use `IDL.error` to report an error message to
+the user
