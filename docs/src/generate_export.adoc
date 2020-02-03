@@ -37,7 +37,9 @@ Because it could happen that the generation of the export file is triggered mult
 we first use `IDL.has_production` to check whether we don't have a production for our id,
 if we already have one we just stop.
 
-Meaning of GenFile???
+todo, add new page for IDL production
+
+Meaning of GenFile???, own file?
 
 The ExportHeaderWriter will create the export file and needs the export macro, the filename, and the
 GenFile to generate into.
