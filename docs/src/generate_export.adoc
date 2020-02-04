@@ -44,9 +44,9 @@ Meaning of GenFile???, own file?
 The ExportHeaderWriter will create the export file and needs the export macro, the filename, and the
 GenFile to generate into.
 
-We do advice to base your export file, include, and macro on the base_export_file, baase_export_include,
+We do advice to base your export file, include, and macro on the base_export_file, base_export_include,
 and base_export_macro in order to keep the number of arguments to be passed as
-small as possible for the developer. Triggering the generation of the export file can be done using your
+small as possible for the developer. Triggering the generation of the export file should be done using your
 own -Gxh flag.
 
 When you don't want to generate the export file itself but use only the macro and include file
