@@ -6,7 +6,7 @@ At the moment shared libraries are used manual export macros have to be used to 
 the symbols that should be accessible from the outside. These export macros are specific
 to each shared library and are normally defined in its own unique export file.
 
-The taox11 ridlc backend has support of generating such an unique export file as part
+The taox11 ridl backend has support of generating such an unique export file as part
 of the generation step.
 
 For example, to generate the export file for CORBA AMI the following helper method can
@@ -34,8 +34,8 @@ For the generation a writer has to be created which is added to the IDL producti
 uniqued id (:amic_export_header in this case).
 
 Because it could happen that the generation of the export file is triggered multiple time
-we first use `IDL.has_production` to check whether we don't have a production for our id,
-if we already have one we just stop.
+we use `IDL.has_production` to check whether we don't have a production for our unique id,
+if we already have a production we don't create another one.
 
 todo, add new page for IDL production
 
@@ -52,5 +52,5 @@ own -Gxh flag.
 When you don't want to generate the export file itself but use only the macro and include file
 we do advice to add a flag to the -X group
 
-When our custom ruby method has a problem it can use `IDL.error/fatal` to report an error message to
-the user
+When our custom ruby method has a problem it can use `IDL.error` to report an error message to
+the user, with `IDL.fatal` the error is also printed and ridl exits with 1.
