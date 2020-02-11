@@ -50,7 +50,9 @@ small as possible for the developer. Triggering the generation of the export fil
 own -Gxh flag.
 
 When you don't want to generate the export file itself but use only the macro and include file
-we do advice to add a flag to the -X group
+we do advice to add a flag to the -X group.
 
-When our custom ruby method has a problem it can use `IDL.error` to report an error message to
+Todo: show how to add custom arguments
+
+When your ruby method has a problem it can use `IDL.error` to report an error message to
 the user, with `IDL.fatal` the error is also printed and ridl exits with 1.
