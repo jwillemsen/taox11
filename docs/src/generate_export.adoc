@@ -1,8 +1,8 @@
 include::_{backend}_settings.adoc[]
 
-= Generating an addition export file
+= Generating an additional export file
 
-At the moment shared libraries are used manual export macros have to be used to export
+At the moment shared libraries are used export macros have to be used to export
 the symbols that should be accessible from the outside. These export macros are specific
 to each shared library and are normally defined in its own unique export file.
 
