@@ -1,4 +1,4 @@
-name: GitHub CI
+name: Linux
 
 on:
   push:
@@ -60,25 +60,20 @@ jobs:
             CXX: g++-9
             RubyVersion: 2.7
             PackageDeps: g++-9
-          - name: VS2017Ruby27
-            os: windows-2016
-            RubyVersion: 2.7
     env:
       CC: ${{ matrix.CC }}
       CXX: ${{ matrix.CXX }}
     steps:
     - uses: actions/checkout@v2
-    - uses: ilammy/msvc-dev-cmd@v1
     - uses: actions/setup-ruby@v1
       with:
         ruby-version: ${{ matrix.RubyVersion }}
     - name: Add repository $Repo
-      if: startsWith(matrix.os,'ubuntu') && matrix.Repo != ''
+      if: matrix.Repo != ''
       run:
         wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key|sudo apt-key add -
         sudo apt-add-repository "deb http://apt.llvm.org/$(lsb_release -cs)/ ${{ matrix.Repo }} main"
     - name: Add packages
-      if: startsWith(matrix.os,'ubuntu')
       run: |
         sudo apt-get --yes update
         sudo apt-get --yes install libxerces-c-dev libssl-dev ${{ matrix.PackageDeps }}
@@ -89,11 +84,6 @@ jobs:
         git clone --depth 1 git://github.com/RemedyIT/axcioma.git ${env:X11_BASE_ROOT}
         git clone --depth 1 git://github.com/RemedyIT/ridl.git ${env:RIDL_ROOT}
       shell: pwsh
-    - name: Run brix11 configure
-      if: startsWith(matrix.os,'windows')
-      run: |
-        %X11_BASE_ROOT%\bin\brix11 configure -W aceroot=%ACE_ROOT% -W taoroot=%TAO_ROOT% -W mpcroot=%MPC_ROOT%
-      shell: cmd
     - name: Run brix11 configure
       run: |
         $X11_BASE_ROOT/bin/brix11 configure -W aceroot=$ACE_ROOT -W taoroot=$TAO_ROOT -W mpcroot=$MPC_ROOT
