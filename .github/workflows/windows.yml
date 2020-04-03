@@ -56,5 +56,5 @@ jobs:
       shell: cmd
     - name: Run brix11 make
       run: |
-        %X11_BASE_ROOT%/bin/brix11 make -N -d -- make -N -d %TAOX11_ROOT%/examples -- make -N -d %TAOX11_ROOT%/orbsvcs/tests -- make -N -d %TAOX11_ROOT%/tests
+        %X11_BASE_ROOT%/bin/brix11 make -N -d %X11_BASE_ROOT%/workspace.sln -- make -N -d %TAOX11_ROOT%/examples -- make -N -d %TAOX11_ROOT%/orbsvcs/tests -- make -N -d %TAOX11_ROOT%/tests
       shell: cmd
