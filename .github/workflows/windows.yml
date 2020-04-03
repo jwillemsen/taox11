@@ -38,7 +38,7 @@ jobs:
         ruby-version: ${{ matrix.RubyVersion }}
     - name: git clone dependent repositories
       run: |
-        git clone --depth 1 --branch Latest_Micro  git://github.com/DOCGroup/ACE_TAO.git ${env:DOC_ROOT}
+        git clone --depth 1 --branch Latest_Micro git://github.com/DOCGroup/ACE_TAO.git ${env:DOC_ROOT}
         git clone --depth 1 --branch Latest_ACETAO_Micro  git://github.com/DOCGroup/MPC.git ${env:MPC_ROOT}
         git clone --depth 1 git://github.com/RemedyIT/axcioma.git ${env:X11_BASE_ROOT}
         git clone --depth 1 git://github.com/RemedyIT/ridl.git ${env:RIDL_ROOT}
@@ -57,5 +57,5 @@ jobs:
       shell: cmd
     - name: Run brix11 make
       run: |
-        %X11_BASE_ROOT%/bin/brix11 make -N -d axcioma -- make -N -d %TAOX11_ROOT%/examples -- make -N -d %TAOX11_ROOT%/orbsvcs/tests -- make -N -d %TAOX11_ROOT%/tests
+        %X11_BASE_ROOT%/bin/brix11 make -N -d %X11_BASE_ROOT% -- make -N -d %TAOX11_ROOT%/examples -- make -N -d %TAOX11_ROOT%/orbsvcs/tests -- make -N -d %TAOX11_ROOT%/tests
       shell: cmd
