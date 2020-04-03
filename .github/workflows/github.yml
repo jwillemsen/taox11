@@ -86,13 +86,13 @@ jobs:
       run: |
         git clone --depth 1 --branch Latest_Micro  git://github.com/DOCGroup/ACE_TAO.git $DOC_ROOT
         git clone --depth 1 --branch Latest_ACETAO_Micro  git://github.com/DOCGroup/MPC.git $MPC_ROOT
-        git clone --depth 1 --branch jwi-caseinsensitive-rcs git://github.com/jwillemsen/axcioma.git $X11_BASE_ROOT
+        git clone --depth 1 git://github.com/RemedyIT/axcioma.git $X11_BASE_ROOT
         git clone --depth 1 git://github.com/RemedyIT/ridl.git $RIDL_ROOT
     - name: Run brix11 configure
       if: startsWith(matrix.os,'windows')
       run: |
-        ruby -x ${env:X11_BASE_ROOT}\bin\brix11 -v -v -v -v -v -v -v configure -W aceroot=${env:ACE_ROOT} -W taoroot=${env:TAO_ROOT} -W mpcroot=${env:MPC_ROOT}
-      shell: pwsh
+        %X11_BASE_ROOT%\bin\brix11 -v -v -v -v -v -v -v configure -W aceroot=%ACE_ROOT% -W taoroot=%TAO_ROOT% -W mpcroot=%MPC_ROOT%
+      shell: cmd
     - name: Run brix11 configure
       run: |
         $X11_BASE_ROOT/bin/brix11 -v -v -v configure -W aceroot=$ACE_ROOT -W taoroot=$TAO_ROOT -W mpcroot=$MPC_ROOT
