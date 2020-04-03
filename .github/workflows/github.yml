@@ -91,7 +91,7 @@ jobs:
     - name: Run brix11 configure
       if: startsWith(matrix.os,'windows')
       run: |
-        ${env:X11_BASE_ROOT}\bin\brix11 -v -v -v configure
+        ruby -x $X11_BASE_ROOT\bin\brix11 -v -v -v configure -W aceroot=$ACE_ROOT -W taoroot=$TAO_ROOT -W mpcroot=$MPC_ROOT
     - name: Run brix11 configure
       run: |
         $X11_BASE_ROOT/bin/brix11 -v -v -v configure -W aceroot=$ACE_ROOT -W taoroot=$TAO_ROOT -W mpcroot=$MPC_ROOT
