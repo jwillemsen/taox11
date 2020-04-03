@@ -11,8 +11,8 @@ on:
 env:
   DOC_ROOT: ${{ github.workspace }}/ACE_TAO
   ACE_ROOT: ${{ github.workspace }}/ACE_TAO/ACE
-  MPC_ROOT: ${{ github.workspace }}/ACE_TAO/MPC
   TAO_ROOT: ${{ github.workspace }}/ACE_TAO/TAO
+  MPC_ROOT: ${{ github.workspace }}/MPC
   X11_BASE_ROOT: ${{ github.workspace }}/axcioma
   RIDL_ROOT: ${{ github.workspace }}/ridl
   TAOX11_ROOT: ${{ github.workspace }}
