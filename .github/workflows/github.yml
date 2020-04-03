@@ -9,12 +9,12 @@ on:
     - cron: '0 7 * * SUN'
 
 env:
-  DOC_ROOT: ${{ github.workspace }}\ACE
-  ACE_ROOT: ${{ github.workspace }}\ACE\ACE
-  MPC_ROOT: ${{ github.workspace }}\ACE\MPC
-  TAO_ROOT: ${{ github.workspace }}\ACE\TAO
-  X11_BASE_ROOT: ${{ github.workspace }}\axcioma
-  RIDL_ROOT: ${{ github.workspace }}\ridl
+  DOC_ROOT: ${{ github.workspace }}/ACE
+  ACE_ROOT: ${{ github.workspace }}/ACE/ACE
+  MPC_ROOT: ${{ github.workspace }}/ACE/MPC
+  TAO_ROOT: ${{ github.workspace }}/ACE/TAO
+  X11_BASE_ROOT: ${{ github.workspace }}/axcioma
+  RIDL_ROOT: ${{ github.workspace }}/ridl
   TAOX11_ROOT: ${{ github.workspace }}
 
 jobs:
