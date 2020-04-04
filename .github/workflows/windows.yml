@@ -45,17 +45,17 @@ jobs:
       shell: pwsh
     - name: Run brix11 configure
       run: |
-        %X11_BASE_ROOT%\bin\brix11 configure -W aceroot=%ACE_ROOT% -W taoroot=%TAO_ROOT% -W mpcroot=%MPC_ROOT%
-      shell: cmd
+        ${env:X11_BASE_ROOT}/bin/brix11 configure -W aceroot=${env:ACE_ROOT} -W taoroot=${env:TAO_ROOT} -W mpcroot=${env:MPC_ROOT}
+      shell: pwsh
     - name: Print brix11 configuration
       run: |
-        %X11_BASE_ROOT%/bin/brix11 env -- configure -P
-      shell: cmd
+        ${env:X11_BASE_ROOT}/bin/brix11 env -- configure -P
+      shell: pwsh
     - name: Run brix11 gen build
       run: |
-        %X11_BASE_ROOT%/bin/brix11 gen build axcioma/workspace.mwc -- gen build %TAOX11_ROOT%/examples -- gen build %TAOX11_ROOT%/orbsvcs/tests -- gen build %TAOX11_ROOT%/tests
-      shell: cmd
+        ${env:X11_BASE_ROOT}/bin/brix11 gen build axcioma/workspace.mwc -- gen build ${env:TAOX11_ROOT}/examples -- gen build ${env:TAOX11_ROOT}/orbsvcs/tests -- gen build ${env:TAOX11_ROOT}/tests
+      shell: pwsh
     - name: Run brix11 make
       run: |
-        %X11_BASE_ROOT%/bin/brix11 make -N -d %X11_BASE_ROOT% -- make -N -d %TAOX11_ROOT%/examples -- make -N -d %TAOX11_ROOT%/orbsvcs/tests -- make -N -d %TAOX11_ROOT%/tests
-      shell: cmd
+        ${env:X11_BASE_ROOT}/bin/brix11 make -N -d ${env:X11_BASE_ROOT} -- make -N -d ${env:TAOX11_ROOT}/examples -- make -N -d ${env:TAOX11_ROOT}/orbsvcs/tests -- make -N -d ${env:TAOX11_ROOT}/tests
+      shell: pwsh
