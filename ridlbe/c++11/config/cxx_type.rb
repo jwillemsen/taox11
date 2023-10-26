@@ -11,7 +11,12 @@ module IDL
   # define language mapping specific type customizations
 
   class Type
-    # IDL typename
+    # IDL typename :node
+    attr_reader :node
+
+    def initialize (node = nil)
+      @node = node
+    end
 
     def idltype_name(_scope = nil)
       "#{typename.split('::').last.downcase}"
@@ -160,6 +165,10 @@ module IDL
       zero_initializer
     end
 
+    def annotations
+      @node ? @node.annotations : nil
+    end
+
     # define cxxtype methods for 'primitive' types
     {
       Char => 'char',
@@ -194,6 +203,17 @@ module IDL
         end
         def is_standard_type?
           true
+        end
+        def value_initializer
+          unless self.annotations.nil?
+            if self.annotations[:default].first
+              default_annotation = self.annotations[:default].first
+              unless default_annotation.nil?
+                return  '{' + default_annotation.fields[:value] + '}'
+              end
+            end
+          end
+          '{}'
         end
       }
     end
