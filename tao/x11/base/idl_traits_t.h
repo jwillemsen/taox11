@@ -13,6 +13,7 @@
 #include "tao/x11/base/stddef.h"
 #include "tao/x11/base/bounded_vector_t.h"
 #include "tao/x11/base/bounded_map_t.h"
+#include "tao/x11/optional_t.h"
 #include <algorithm>
 #include <codecvt>
 #include <locale>
@@ -388,6 +389,19 @@ namespace TAOX11_NAMESPACE
           elem_formatter () (os_, val_.back());
           os_ << ']';
         }
+        return os_;
+      }
+    };
+
+    template <typename T, typename OStrm_>
+    struct formatter<IDL::optional<T>, OStrm_>
+    {
+      inline OStrm_& operator ()(
+          OStrm_& os_,
+          const IDL::optional<T>& val_)
+      {
+  if (val_.has_value ()) { os_ << IDL::traits<T>::write(val_.value ()); } else { os_ << "std::nullopt"; }
+
         return os_;
       }
     };

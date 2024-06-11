@@ -147,9 +147,6 @@ namespace TAOX11_NAMESPACE::IDL
     static inline __Writer<Formatter> write (in_type val) { return {val}; }
   };
 
-  template <typename OStrm_>
-  struct formatter<IDL::optional<int16_t>, OStrm_>;
-
   template <typename OStrm_, typename Fmt>
   OStrm_& operator <<(OStrm_&, IDL::traits<IDL::optional<int16_t>>::__Writer<Fmt>);
   #endif // _STRUCT_BAR_TRAITS_
@@ -158,18 +155,6 @@ namespace TAOX11_NAMESPACE::IDL
 // generated from StubHeaderIDLTraitsDefWriter#pre_visit
 namespace TAOX11_NAMESPACE::IDL
 {
-  template <typename OStrm_>
-  struct formatter<IDL::optional<int16_t>, OStrm_>
-  {
-    inline OStrm_& operator ()(
-        OStrm_& os_,
-        const IDL::optional<int16_t>& val_)
-    {
-if (val_.has_value ()) { os_ << IDL::traits<int16_t>::write(val_.value ()); } else { os_ << "std::nullopt"; }
-
-      return os_;
-    }
-  };
 
 
   template <typename OStrm_, typename Fmt>
