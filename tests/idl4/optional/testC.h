@@ -155,8 +155,6 @@ namespace TAOX11_NAMESPACE::IDL
 // generated from StubHeaderIDLTraitsDefWriter#pre_visit
 namespace TAOX11_NAMESPACE::IDL
 {
-
-
   template <typename OStrm_, typename Fmt>
   inline OStrm_& operator <<(OStrm_& os, IDL::traits<IDL::optional<int16_t>>::__Writer<Fmt> w)
   {
