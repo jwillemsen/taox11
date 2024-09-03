@@ -69,5 +69,8 @@ interface A
 
   typedef fixed<5,5> f_type;
   const f_type five = 12345;
+
+  const string s_val = "text";
+  const wstring ws_val = L"widestring\n \xbf \ufe0e";
 };
 
