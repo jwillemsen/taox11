@@ -264,11 +264,17 @@ module IDL
         printiln('// generated from StubHeaderWriter#visit_const')
         printiln("/// @copydoc #{self.doc_scoped_name node}")
         case node.expression.idltype
-        when Type::String, Type::WString
+        when Type::String
           if node.enclosure.is_a?(IDL::AST::Module)
-            printi("const #{node.idltype.cxx_type(node.enclosure)} ")
+            printi("constexpr std::string_view ")
           else
-            printi("static inline const #{node.idltype.cxx_type(node.enclosure)} ")
+            printi("static constexpr std::string_view ")
+          end
+        when Type::WString
+          if node.enclosure.is_a?(IDL::AST::Module)
+            printi("constexpr std::wstring_view ")
+          else
+            printi("static constexpr std::wstring_view ")
           end
         else
           if node.enclosure.is_a?(IDL::AST::Module)
