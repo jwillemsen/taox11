@@ -2,6 +2,11 @@
 // generated from <%= ridl_template_path %>
 TAO_CORBA::Boolean operator<< (TAO_OutputCDR &/*strm*/, const <%= scoped_cxxname %> & /*_tao_bitset*/)
 {
+% size = 0
+% bitfields.each do |bitfield|
+%   size += bitfield.bits
+% end
+  // Total size <%= size %> bits
 %#   return strm << static_cast<<%= bitbound.cxx_type %>> (_tao_bitmask);
   return true;
 }
