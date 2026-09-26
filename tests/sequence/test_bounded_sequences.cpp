@@ -23,6 +23,8 @@ test_bounded_sequences (IDL::traits<Test::Foo>::ref_type foo, int &error_count)
   std::vector<int> vector_std {3};
   swap (vector_a, vector_b);
   swap (vector_a, vector_std);
+  if (vector_a[0] != 3 || vector_std[0] != 2)
+    ++error_count;
   swap (vector_std, vector_a);
   if (vector_a[0] != 2 || vector_b[0] != 1 || vector_std[0] != 3)
     ++error_count;
@@ -31,6 +33,8 @@ test_bounded_sequences (IDL::traits<Test::Foo>::ref_type foo, int &error_count)
   std::map<int, int> map_std {{3, 3}};
   swap (map_a, map_b);
   swap (map_a, map_std);
+  if (map_a.begin ()->first != 3 || map_std.begin ()->first != 2)
+    ++error_count;
   swap (map_std, map_a);
   if (map_a.begin ()->first != 2 || map_b.begin ()->first != 1 ||
       map_std.begin ()->first != 3)
@@ -40,6 +44,8 @@ test_bounded_sequences (IDL::traits<Test::Foo>::ref_type foo, int &error_count)
   std::string string_std ("ghi");
   swap (string_a, string_b);
   swap (string_a, string_std);
+  if (string_a != "ghi" || string_std != "def")
+    ++error_count;
   swap (string_std, string_a);
   if (string_a != "def" || string_b != "abc" || string_std != "ghi")
     ++error_count;
