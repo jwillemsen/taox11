@@ -18,7 +18,7 @@ namespace
 {
   int errors = 0;
 
-  void check(bool ok, const char* what)
+  void check(bool ok, char const* what)
   {
     if (!ok)
     {
@@ -28,7 +28,7 @@ namespace
   }
 
   template <typename F>
-  void expect_conversion_error(const char* input)
+  void expect_conversion_error(char const* input)
   {
     try
     {
@@ -36,7 +36,7 @@ namespace
       (void)value;
       check(false, "expected DATA_CONVERSION");
     }
-    catch (const CORBA::DATA_CONVERSION&) {}
+    catch (CORBA::DATA_CONVERSION const&) {}
   }
 }
 
@@ -50,12 +50,12 @@ int main(int, char*[])
 
   try
   {
-    const fixed_type zero;
+    fixed_type const zero;
     check(!static_cast<bool>(zero), "zero is false");
     check(zero.to_string() == "0.000", "default value and scale");
 
-    const fixed_type left("1.250");
-    const fixed_type right("2.000");
+    fixed_type const left("1.250");
+    fixed_type const right("2.000");
     check(left.to_string() == "1.250", "preserve trailing zeros");
     check(fixed_type("1.250d") == left, "IDL fixed suffix");
     check(left.fixed_digits() == 4 && left.fixed_scale() == 3, "value digits and scale");
@@ -110,7 +110,7 @@ int main(int, char*[])
     check(static_cast<bool>(fractional_input >> fractional_decoded) &&
           fractional_decoded == V::F::fraction, "CDR all-fraction round trip");
 
-    const fixed_type negative("-12.345");
+    fixed_type const negative("-12.345");
     TAO_OutputCDR negative_output;
     check(static_cast<bool>(negative_output << negative), "CDR negative write");
     TAO_InputCDR negative_input(negative_output);
@@ -136,29 +136,29 @@ int main(int, char*[])
       (void)(left / zero);
       check(false, "division by zero must throw");
     }
-    catch (const CORBA::DATA_CONVERSION&) {}
+    catch (CORBA::DATA_CONVERSION const&) {}
 
     using big_fixed = IDL::Fixed<31, 0>;
-    const big_fixed max_value("9999999999999999999999999999999");
+    big_fixed const max_value("9999999999999999999999999999999");
     try
     {
       (void)(max_value + big_fixed(1));
       check(false, "addition overflow must throw");
     }
-    catch (const CORBA::DATA_CONVERSION&) {}
+    catch (CORBA::DATA_CONVERSION const&) {}
     try
     {
       (void)(max_value * big_fixed(10));
       check(false, "multiplication overflow must throw");
     }
-    catch (const CORBA::DATA_CONVERSION&) {}
+    catch (CORBA::DATA_CONVERSION const&) {}
 
     try
     {
       (void)static_cast<int64_t>(big_fixed("9223372036854775808"));
       check(false, "integer conversion overflow must throw");
     }
-    catch (const CORBA::DATA_CONVERSION&) {}
+    catch (CORBA::DATA_CONVERSION const&) {}
 
     expect_conversion_error<fixed_type>("1e20");
     try
@@ -166,9 +166,9 @@ int main(int, char*[])
       (void)fixed_type(std::numeric_limits<double>::infinity());
       check(false, "nonfinite value must throw");
     }
-    catch (const CORBA::DATA_CONVERSION&) {}
+    catch (CORBA::DATA_CONVERSION const&) {}
   }
-  catch (const std::exception& ex)
+  catch (std::exception const& ex)
   {
     TAOX11_TEST_ERROR << "unexpected exception: " << ex << std::endl;
     ++errors;

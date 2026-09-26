@@ -46,22 +46,22 @@ namespace TAOX11_NAMESPACE
       explicit Fixed(uint64_t value) : Fixed(std::to_string(value)) {}
       explicit Fixed(double value) : Fixed(from_floating(value)) {}
       explicit Fixed(long double value) : Fixed(from_floating(value)) {}
-      explicit Fixed(const std::string& value) : value_(parse(value)) {}
+      explicit Fixed(std::string const& value) : value_(parse(value)) {}
 
-      Fixed(const Fixed&) = default;
+      Fixed(Fixed const&) = default;
       Fixed(Fixed&&) = default;
-      Fixed& operator=(const Fixed&) = default;
+      Fixed& operator=(Fixed const&) = default;
       Fixed& operator=(Fixed&&) = default;
       ~Fixed() = default;
 
       explicit operator int64_t() const
       {
-        const std::string value = this->to_string();
+        std::string const value = this->to_string();
         try
         {
           return std::stoll(value.substr(0, value.find('.')));
         }
-        catch (const std::out_of_range&)
+        catch (std::out_of_range const&)
         {
           throw CORBA::DATA_CONVERSION();
         }
@@ -94,33 +94,33 @@ namespace TAOX11_NAMESPACE
         return buffer;
       }
 
-      Fixed& operator+=(const Fixed& rhs)
+      Fixed& operator+=(Fixed const& rhs)
       {
         try { this->value_ = checked(this->value_ + rhs.value_); }
-        catch (const std::overflow_error&) { throw CORBA::DATA_CONVERSION(); }
+        catch (std::overflow_error const&) { throw CORBA::DATA_CONVERSION(); }
         return *this;
       }
 
-      Fixed& operator-=(const Fixed& rhs)
+      Fixed& operator-=(Fixed const& rhs)
       {
         try { this->value_ = checked(this->value_ - rhs.value_); }
-        catch (const std::overflow_error&) { throw CORBA::DATA_CONVERSION(); }
+        catch (std::overflow_error const&) { throw CORBA::DATA_CONVERSION(); }
         return *this;
       }
 
-      Fixed& operator*=(const Fixed& rhs)
+      Fixed& operator*=(Fixed const& rhs)
       {
         try { this->value_ = checked(this->value_ * rhs.value_); }
-        catch (const std::overflow_error&) { throw CORBA::DATA_CONVERSION(); }
+        catch (std::overflow_error const&) { throw CORBA::DATA_CONVERSION(); }
         return *this;
       }
 
-      Fixed& operator/=(const Fixed& rhs)
+      Fixed& operator/=(Fixed const& rhs)
       {
         if (!rhs)
           throw CORBA::DATA_CONVERSION();
         try { this->value_ = checked(this->value_ / rhs.value_); }
-        catch (const std::overflow_error&) { throw CORBA::DATA_CONVERSION(); }
+        catch (std::overflow_error const&) { throw CORBA::DATA_CONVERSION(); }
         return *this;
       }
 
@@ -135,30 +135,30 @@ namespace TAOX11_NAMESPACE
 
       uint16_t fixed_digits() const
       {
-        const std::string value = this->to_string();
-        const size_t start = value.front() == '-' ? 1 : 0;
-        const size_t point = value.find('.');
-        const size_t end = point == std::string::npos ? value.size() : point;
+        std::string const value = this->to_string();
+        size_t const start = value.front() == '-' ? 1 : 0;
+        size_t const point = value.find('.');
+        size_t const end = point == std::string::npos ? value.size() : point;
         size_t first = start;
         while (first < end && value[first] == '0')
           ++first;
-        const size_t used = end - first +
+        size_t const used = end - first +
             (point == std::string::npos ? 0 : value.size() - point - 1);
         return static_cast<uint16_t>(used ? used : 1);
       }
       uint16_t fixed_scale() const { return this->value_.fixed_scale(); }
 
-      friend Fixed operator+(Fixed lhs, const Fixed& rhs) { return lhs += rhs; }
-      friend Fixed operator-(Fixed lhs, const Fixed& rhs) { return lhs -= rhs; }
-      friend Fixed operator*(Fixed lhs, const Fixed& rhs) { return lhs *= rhs; }
-      friend Fixed operator/(Fixed lhs, const Fixed& rhs) { return lhs /= rhs; }
+      friend Fixed operator+(Fixed lhs, Fixed const& rhs) { return lhs += rhs; }
+      friend Fixed operator-(Fixed lhs, Fixed const& rhs) { return lhs -= rhs; }
+      friend Fixed operator*(Fixed lhs, Fixed const& rhs) { return lhs *= rhs; }
+      friend Fixed operator/(Fixed lhs, Fixed const& rhs) { return lhs /= rhs; }
 
-      friend bool operator==(const Fixed& lhs, const Fixed& rhs) { return lhs.value_ == rhs.value_; }
-      friend bool operator!=(const Fixed& lhs, const Fixed& rhs) { return !(lhs == rhs); }
-      friend bool operator<(const Fixed& lhs, const Fixed& rhs) { return lhs.value_ < rhs.value_; }
-      friend bool operator>(const Fixed& lhs, const Fixed& rhs) { return rhs < lhs; }
-      friend bool operator<=(const Fixed& lhs, const Fixed& rhs) { return !(rhs < lhs); }
-      friend bool operator>=(const Fixed& lhs, const Fixed& rhs) { return !(lhs < rhs); }
+      friend bool operator==(Fixed const& lhs, Fixed const& rhs) { return lhs.value_ == rhs.value_; }
+      friend bool operator!=(Fixed const& lhs, Fixed const& rhs) { return !(lhs == rhs); }
+      friend bool operator<(Fixed const& lhs, Fixed const& rhs) { return lhs.value_ < rhs.value_; }
+      friend bool operator>(Fixed const& lhs, Fixed const& rhs) { return rhs < lhs; }
+      friend bool operator<=(Fixed const& lhs, Fixed const& rhs) { return !(rhs < lhs); }
+      friend bool operator>=(Fixed const& lhs, Fixed const& rhs) { return !(lhs < rhs); }
 
       friend void swap(Fixed& lhs, Fixed& rhs)
       {
@@ -166,7 +166,7 @@ namespace TAOX11_NAMESPACE
         swap(lhs.value_, rhs.value_);
       }
 
-      friend std::ostream& operator<<(std::ostream& os, const Fixed& value)
+      friend std::ostream& operator<<(std::ostream& os, Fixed const& value)
       {
         return os << value.to_string();
       }
@@ -177,7 +177,7 @@ namespace TAOX11_NAMESPACE
         if (is >> token)
         {
           try { value = Fixed(token); }
-          catch (const CORBA::DATA_CONVERSION&) { is.setstate(std::ios::failbit); }
+          catch (CORBA::DATA_CONVERSION const&) { is.setstate(std::ios::failbit); }
         }
         return is;
       }
@@ -188,10 +188,10 @@ namespace TAOX11_NAMESPACE
       bool write_cdr(Stream& cdr) const
       {
         std::string number = this->to_string();
-        const bool negative = number.front() == '-';
+        bool const negative = number.front() == '-';
         if (negative)
           number.erase(0, 1);
-        const size_t point = number.find('.');
+        size_t const point = number.find('.');
         if (point != std::string::npos)
           number.erase(point, 1);
         while (number.size() > digits && number.front() == '0')
@@ -217,7 +217,7 @@ namespace TAOX11_NAMESPACE
           return false;
         if (digits % 2 == 0 && (octets.front() >> 4) != 0)
           return false;
-        const ACE_CDR::Octet sign = octets.back() & 0x0f;
+        ACE_CDR::Octet const sign = octets.back() & 0x0f;
         if (sign != 0x0c && sign != 0x0d)
           return false;
 
@@ -225,8 +225,8 @@ namespace TAOX11_NAMESPACE
         number.reserve(digits);
         for (size_t i = 0; i < octets.size(); ++i)
         {
-          const ACE_CDR::Octet high = octets[i] >> 4;
-          const ACE_CDR::Octet low = octets[i] & 0x0f;
+          ACE_CDR::Octet const high = octets[i] >> 4;
+          ACE_CDR::Octet const low = octets[i] & 0x0f;
           if (high > 9 || (i + 1 < octets.size() && low > 9))
             return false;
           number += static_cast<char>('0' + high);
@@ -244,16 +244,16 @@ namespace TAOX11_NAMESPACE
           value = Fixed(number);
           return true;
         }
-        catch (const CORBA::DATA_CONVERSION&)
+        catch (CORBA::DATA_CONVERSION const&)
         {
           return false;
         }
       }
 
     private:
-      explicit Fixed(const ACE_CDR::Fixed& value) : value_(checked(value)) {}
+      explicit Fixed(ACE_CDR::Fixed const& value) : value_(checked(value)) {}
 
-      static ACE_CDR::Fixed checked(const ACE_CDR::Fixed& value)
+      static ACE_CDR::Fixed checked(ACE_CDR::Fixed const& value)
       {
         char buffer[ACE_CDR::Fixed::MAX_STRING_SIZE];
         if (!value.to_string(buffer, sizeof(buffer)))
@@ -268,7 +268,7 @@ namespace TAOX11_NAMESPACE
         if (text.back() == 'd' || text.back() == 'D')
           text.pop_back();
 
-        const size_t start = (!text.empty() && (text.front() == '-' || text.front() == '+')) ? 1 : 0;
+        size_t const start = (!text.empty() && (text.front() == '-' || text.front() == '+')) ? 1 : 0;
         size_t point = std::string::npos;
         size_t count = 0;
         for (size_t i = start; i < text.size(); ++i)
@@ -282,9 +282,9 @@ namespace TAOX11_NAMESPACE
         }
         if (count == 0)
           throw CORBA::DATA_CONVERSION();
-        const size_t decimal = point == std::string::npos ? text.size() : point;
-        const size_t first = text.find_first_not_of('0', start);
-        const size_t integral = first != std::string::npos && first < decimal ? decimal - first : 0;
+        size_t const decimal = point == std::string::npos ? text.size() : point;
+        size_t const first = text.find_first_not_of('0', start);
+        size_t const integral = first != std::string::npos && first < decimal ? decimal - first : 0;
         size_t fraction = point == std::string::npos ? 0 : text.size() - point - 1;
         if (fraction > scale)
         {
@@ -322,7 +322,7 @@ namespace TAOX11_NAMESPACE
 
 TAO_BEGIN_VERSIONED_NAMESPACE_DECL
   template <uint16_t digits, uint16_t scale>
-  inline bool operator<<(TAO_OutputCDR& cdr, const TAOX11_NAMESPACE::IDL::Fixed<digits, scale>& value)
+  inline bool operator<<(TAO_OutputCDR& cdr, TAOX11_NAMESPACE::IDL::Fixed<digits, scale> const& value)
   {
     return value.write_cdr(cdr);
   }
@@ -337,7 +337,7 @@ TAO_END_VERSIONED_NAMESPACE_DECL
 namespace std
 {
   template <uint16_t digits, uint16_t scale>
-  std::string to_string(const TAOX11_NAMESPACE::IDL::Fixed<digits, scale>& value)
+  std::string to_string(TAOX11_NAMESPACE::IDL::Fixed<digits, scale> const& value)
   {
     return value.to_string();
   }
