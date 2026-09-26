@@ -82,6 +82,8 @@ int main(int, char*[])
     check((right - left).to_string() == "0.750", "subtraction");
     check((right * left).to_string() == "2.500", "multiplication");
     check((right / fixed_type("1.600")).to_string() == "1.250", "division");
+    check((fixed_type("1.000") / fixed_type("3.000")).to_string() == "0.333",
+          "division truncates to declared scale");
     check(left < right && right > left && left != right && left == fixed_type("1.25"),
           "comparisons");
     check(fixed_type("-0.005").round(2).to_string() == "-0.010", "round away from zero");

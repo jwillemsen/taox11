@@ -95,21 +95,21 @@ namespace TAOX11_NAMESPACE
 
       Fixed& operator+=(Fixed const& rhs)
       {
-        try { this->value_ = checked(this->value_ + rhs.value_); }
+        try { this->value_ = checked((this->value_ + rhs.value_).truncate(scale)); }
         catch (std::overflow_error const&) { throw CORBA::DATA_CONVERSION(); }
         return *this;
       }
 
       Fixed& operator-=(Fixed const& rhs)
       {
-        try { this->value_ = checked(this->value_ - rhs.value_); }
+        try { this->value_ = checked((this->value_ - rhs.value_).truncate(scale)); }
         catch (std::overflow_error const&) { throw CORBA::DATA_CONVERSION(); }
         return *this;
       }
 
       Fixed& operator*=(Fixed const& rhs)
       {
-        try { this->value_ = checked(this->value_ * rhs.value_); }
+        try { this->value_ = checked((this->value_ * rhs.value_).truncate(scale)); }
         catch (std::overflow_error const&) { throw CORBA::DATA_CONVERSION(); }
         return *this;
       }
@@ -118,7 +118,7 @@ namespace TAOX11_NAMESPACE
       {
         if (!rhs)
           throw CORBA::DATA_CONVERSION();
-        try { this->value_ = checked(this->value_ / rhs.value_); }
+        try { this->value_ = checked((this->value_ / rhs.value_).truncate(scale)); }
         catch (std::overflow_error const&) { throw CORBA::DATA_CONVERSION(); }
         return *this;
       }
