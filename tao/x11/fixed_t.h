@@ -166,11 +166,6 @@ namespace TAOX11_NAMESPACE
         swap(lhs.value_, rhs.value_);
       }
 
-      friend std::ostream& operator<<(std::ostream& os, Fixed const& value)
-      {
-        return os << value.to_string();
-      }
-
       friend std::istream& operator>>(std::istream& is, Fixed& value)
       {
         std::string token;

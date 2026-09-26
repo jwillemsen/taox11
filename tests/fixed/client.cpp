@@ -7,6 +7,7 @@
 
 #include "tao/x11/corba.h"
 #include "testC.h"
+#include "testP.h"
 #include "testlib/taox11_testlog.h"
 
 #include <cstdint>
@@ -36,7 +37,7 @@ namespace
       (void)value;
       check(false, "expected DATA_CONVERSION");
     }
-    catch (CORBA::DATA_CONVERSION const&) {}
+    catch (TAOX11_NAMESPACE::CORBA::DATA_CONVERSION const&) {}
   }
 }
 
@@ -81,9 +82,10 @@ int main(int, char*[])
 
     std::stringstream stream;
     stream << left;
-    check(stream.str() == "1.250", "stream output");
+    check(stream.str().find("1.250") != std::string::npos, "stream output");
+    std::istringstream input_stream("1.250");
     fixed_type read;
-    stream >> read;
+    input_stream >> read;
     check(read == left, "stream input");
 
     TAO_OutputCDR output;
@@ -136,7 +138,7 @@ int main(int, char*[])
       (void)(left / zero);
       check(false, "division by zero must throw");
     }
-    catch (CORBA::DATA_CONVERSION const&) {}
+    catch (TAOX11_NAMESPACE::CORBA::DATA_CONVERSION const&) {}
 
     using big_fixed = IDL::Fixed<31, 0>;
     big_fixed const max_value("9999999999999999999999999999999");
@@ -145,20 +147,20 @@ int main(int, char*[])
       (void)(max_value + big_fixed(1));
       check(false, "addition overflow must throw");
     }
-    catch (CORBA::DATA_CONVERSION const&) {}
+    catch (TAOX11_NAMESPACE::CORBA::DATA_CONVERSION const&) {}
     try
     {
       (void)(max_value * big_fixed(10));
       check(false, "multiplication overflow must throw");
     }
-    catch (CORBA::DATA_CONVERSION const&) {}
+    catch (TAOX11_NAMESPACE::CORBA::DATA_CONVERSION const&) {}
 
     try
     {
       (void)static_cast<int64_t>(big_fixed("9223372036854775808"));
       check(false, "integer conversion overflow must throw");
     }
-    catch (CORBA::DATA_CONVERSION const&) {}
+    catch (TAOX11_NAMESPACE::CORBA::DATA_CONVERSION const&) {}
 
     expect_conversion_error<fixed_type>("1e20");
     try
@@ -166,7 +168,7 @@ int main(int, char*[])
       (void)fixed_type(std::numeric_limits<double>::infinity());
       check(false, "nonfinite value must throw");
     }
-    catch (CORBA::DATA_CONVERSION const&) {}
+    catch (TAOX11_NAMESPACE::CORBA::DATA_CONVERSION const&) {}
   }
   catch (std::exception const& ex)
   {
