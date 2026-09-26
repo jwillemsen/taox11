@@ -139,5 +139,10 @@ int main(int, char*[])
     TAOX11_TEST_ERROR << "unexpected exception: " << ex.what() << std::endl;
     ++errors;
   }
+  catch (...)
+  {
+    TAOX11_TEST_ERROR << "unexpected non-standard exception" << std::endl;
+    ++errors;
+  }
   return errors == 0 ? 0 : 1;
 }
