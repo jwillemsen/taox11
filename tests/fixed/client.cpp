@@ -29,16 +29,31 @@ namespace
     }
   }
 
-  template <typename F>
-  void expect_conversion_error(char const* input)
+  template <typename Action>
+  void expect_conversion_error(Action action, char const* what)
   {
+    bool caught = false;
     try
     {
-      F value(input);
-      (void)value;
-      check(false, "expected DATA_CONVERSION");
+      action();
     }
-    catch (CORBA::DATA_CONVERSION const&) {}
+    catch (CORBA::DATA_CONVERSION const&)
+    {
+      caught = true;
+    }
+    catch (std::exception const& ex)
+    {
+      TAOX11_TEST_ERROR << "fixed: unexpected exception for " << what << ": " << ex.what() << std::endl;
+      ++errors;
+      return;
+    }
+    catch (...)
+    {
+      TAOX11_TEST_ERROR << "fixed: unexpected exception for " << what << std::endl;
+      ++errors;
+      return;
+    }
+    check(caught, what);
   }
 }
 
@@ -99,51 +114,29 @@ int main(int, char*[])
     check(V::F::fraction.fixed_digits() == 5 && V::F::fraction.fixed_scale() == 5,
           "fractional value digits and scale");
 
-    expect_conversion_error<fixed_type>("1.2not-a-number");
-    expect_conversion_error<fixed_type>("1.2345");
-    expect_conversion_error<fixed_type>("12345678");
-    expect_conversion_error<V::F::f_type>("12345");
+    expect_conversion_error([] { (void)fixed_type("1.2not-a-number"); }, "invalid text must throw DATA_CONVERSION");
+    expect_conversion_error([] { (void)fixed_type("1.2345"); }, "excess scale must throw DATA_CONVERSION");
+    expect_conversion_error([] { (void)fixed_type("12345678"); }, "excess digits must throw DATA_CONVERSION");
+    expect_conversion_error([] { (void)V::F::f_type("12345"); }, "fractional overflow must throw DATA_CONVERSION");
 
-    try
-    {
-      (void)(left / zero);
-      check(false, "division by zero must throw");
-    }
-    catch (CORBA::DATA_CONVERSION const&) {}
+    expect_conversion_error([&] { (void)(left / zero); }, "division by zero must throw DATA_CONVERSION");
 
     using big_fixed = IDL::Fixed<31, 0>;
     big_fixed const max_value("9999999999999999999999999999999");
-    try
-    {
-      (void)(max_value + big_fixed(1));
-      check(false, "addition overflow must throw");
-    }
-    catch (CORBA::DATA_CONVERSION const&) {}
-    try
-    {
-      (void)(max_value * big_fixed(10));
-      check(false, "multiplication overflow must throw");
-    }
-    catch (CORBA::DATA_CONVERSION const&) {}
+    expect_conversion_error([&] { (void)(max_value + big_fixed(1)); },
+                            "addition overflow must throw DATA_CONVERSION");
+    expect_conversion_error([&] { (void)(max_value * big_fixed(10)); },
+                            "multiplication overflow must throw DATA_CONVERSION");
+    expect_conversion_error([] { (void)static_cast<int64_t>(big_fixed("9223372036854775808")); },
+                            "integer overflow must throw DATA_CONVERSION");
 
-    try
-    {
-      (void)static_cast<int64_t>(big_fixed("9223372036854775808"));
-      check(false, "integer conversion overflow must throw");
-    }
-    catch (CORBA::DATA_CONVERSION const&) {}
-
-    expect_conversion_error<fixed_type>("1e20");
-    try
-    {
-      (void)fixed_type(std::numeric_limits<double>::infinity());
-      check(false, "nonfinite value must throw");
-    }
-    catch (CORBA::DATA_CONVERSION const&) {}
+    expect_conversion_error([] { (void)fixed_type("1e20"); }, "exponent must throw DATA_CONVERSION");
+    expect_conversion_error([] { (void)fixed_type(std::numeric_limits<double>::infinity()); },
+                            "nonfinite value must throw DATA_CONVERSION");
   }
   catch (std::exception const& ex)
   {
-    TAOX11_TEST_ERROR << "unexpected exception: " << ex << std::endl;
+    TAOX11_TEST_ERROR << "unexpected exception: " << ex.what() << std::endl;
     ++errors;
   }
   return errors == 0 ? 0 : 1;
