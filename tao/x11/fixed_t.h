@@ -10,7 +10,6 @@
 #define __IDL_FIXED_T_H_INCLUDED__
 
 #include "ace/CDR_Base.h"
-#include "tao/CDR.h"
 #include "tao/x11/base/versioned_x11_namespace.h"
 #include "tao/x11/system_exception.h"
 

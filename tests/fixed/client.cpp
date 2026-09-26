@@ -7,7 +7,6 @@
 
 #include "tao/x11/corba.h"
 #include "testC.h"
-#include "testP.h"
 #include "testlib/taox11_testlog.h"
 
 #include <cstdint>
@@ -15,10 +14,10 @@
 #include <sstream>
 #include <tuple>
 
+int test_fixed_cdr(fixed_type const& left, fixed_type const& right);
+
 namespace
 {
-  using taox11::CORBA::DATA_CONVERSION;
-
   int errors = 0;
 
   void check(bool ok, char const* what)
@@ -39,7 +38,7 @@ namespace
       (void)value;
       check(false, "expected DATA_CONVERSION");
     }
-    catch (DATA_CONVERSION const&) {}
+    catch (CORBA::DATA_CONVERSION const&) {}
   }
 }
 
@@ -90,37 +89,7 @@ int main(int, char*[])
     input_stream >> read;
     check(read == left, "stream input");
 
-    TAO_OutputCDR output;
-    check(static_cast<bool>(output << left), "CDR write");
-    TAO_InputCDR input(output);
-    fixed_type decoded;
-    check(static_cast<bool>(input >> decoded) && decoded == left, "CDR round trip");
-
-    fixed_array array_value {};
-    array_value[0] = left;
-    array_value[1] = right;
-    array_value[2] = fixed_type("-3.125");
-    TAO_OutputCDR array_output;
-    check(static_cast<bool>(array_output << array_value), "fixed array CDR write");
-    TAO_InputCDR array_input(array_output);
-    fixed_array array_decoded {};
-    check(static_cast<bool>(array_input >> array_decoded) && array_decoded == array_value,
-          "fixed array CDR round trip");
-
-    TAO_OutputCDR fractional_output;
-    check(static_cast<bool>(fractional_output << V::F::fraction), "CDR all-fraction write");
-    TAO_InputCDR fractional_input(fractional_output);
-    V::F::f_type fractional_decoded;
-    check(static_cast<bool>(fractional_input >> fractional_decoded) &&
-          fractional_decoded == V::F::fraction, "CDR all-fraction round trip");
-
-    fixed_type const negative("-12.345");
-    TAO_OutputCDR negative_output;
-    check(static_cast<bool>(negative_output << negative), "CDR negative write");
-    TAO_InputCDR negative_input(negative_output);
-    fixed_type negative_decoded;
-    check(static_cast<bool>(negative_input >> negative_decoded) &&
-          negative_decoded == negative, "CDR negative round trip");
+    errors += test_fixed_cdr(left, right);
 
     check(pi_double.to_string() == "3.142857", "global fixed constant");
     check(V::pi.to_string() == "3.142857", "module fixed constant");
@@ -140,7 +109,7 @@ int main(int, char*[])
       (void)(left / zero);
       check(false, "division by zero must throw");
     }
-    catch (DATA_CONVERSION const&) {}
+    catch (CORBA::DATA_CONVERSION const&) {}
 
     using big_fixed = IDL::Fixed<31, 0>;
     big_fixed const max_value("9999999999999999999999999999999");
@@ -149,20 +118,20 @@ int main(int, char*[])
       (void)(max_value + big_fixed(1));
       check(false, "addition overflow must throw");
     }
-    catch (DATA_CONVERSION const&) {}
+    catch (CORBA::DATA_CONVERSION const&) {}
     try
     {
       (void)(max_value * big_fixed(10));
       check(false, "multiplication overflow must throw");
     }
-    catch (DATA_CONVERSION const&) {}
+    catch (CORBA::DATA_CONVERSION const&) {}
 
     try
     {
       (void)static_cast<int64_t>(big_fixed("9223372036854775808"));
       check(false, "integer conversion overflow must throw");
     }
-    catch (DATA_CONVERSION const&) {}
+    catch (CORBA::DATA_CONVERSION const&) {}
 
     expect_conversion_error<fixed_type>("1e20");
     try
@@ -170,7 +139,7 @@ int main(int, char*[])
       (void)fixed_type(std::numeric_limits<double>::infinity());
       check(false, "nonfinite value must throw");
     }
-    catch (DATA_CONVERSION const&) {}
+    catch (CORBA::DATA_CONVERSION const&) {}
   }
   catch (std::exception const& ex)
   {

@@ -12,6 +12,7 @@ project(*x11_Client): taox11_client {
   after += *x11_Idl
   Source_Files {
     client.cpp
+    cdr.cpp
   }
   Source_Files {
     testC.cpp
